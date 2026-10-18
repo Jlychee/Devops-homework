@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: biba-boba
+  namespace: homework-1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: biba-boba
+  template:
+    metadata:
+      labels:
+        app: biba-boba
+    spec:
+      containers:
+        - name: biba-boba
+          image: localhost:5001/biba-boba:v4
+          envFrom:
+            - configMapRef:
+                name: biba-boba-config
+          env:
+            - name: APP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: biba-boba-secret
+                  key: APP_TOKEN
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+              ephemeral-storage: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+              ephemeral-storage: "256Mi"
